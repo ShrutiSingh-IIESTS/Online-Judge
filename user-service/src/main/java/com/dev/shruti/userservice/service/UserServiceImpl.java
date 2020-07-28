@@ -4,18 +4,23 @@ import com.dev.shruti.userservice.dto.UserDto;
 import com.dev.shruti.userservice.model.User;
 import com.dev.shruti.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService{
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
+    private  PasswordEncoder passwordEncoder= new BCryptPasswordEncoder(12);
     @Autowired
     private UserRepository userRepository;
     @Override
     public User RegisterUser(UserDto userDto) {
-        if(userRepository.findByEmail(userDto.getEmail())!=null)
+        if(userRepository.findAllByEmail(userDto.getEmail())!=null)
         {
             // TODO : Throws exception
         }
@@ -23,7 +28,7 @@ public class UserServiceImpl implements UserService{
         user.setFullName(userDto.getFullName());
         user.setEmail(userDto.getEmail());
         user.setActive(false);
-        user.setPassword(userDto.getPassword()); // TODO: Encrypt Password
+        user.setPassword(passwordEncoder.encode(userDto.getPassword())); // TODO: Encrypt Password
 
         User savedUser = userRepository.save(user);
         return savedUser;
