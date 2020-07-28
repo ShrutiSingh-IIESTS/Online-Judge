@@ -12,7 +12,7 @@ import java.util.List;
 public class Permission {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String name;
     @ManyToMany(mappedBy = "permissions")
     private List<Role> roles;
